@@ -160,17 +160,16 @@ async def call_llm(messages: list[Message], catalog: list[dict]) -> dict:
     }
 
     headers = {
-        "x-api-key": ANTHROPIC_API_KEY,
-        "anthropic-version": "2023-06-01",
-        "content-type": "application/json",
-    }
+    "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+    "Content-Type": "application/json",
+}
 
     async with httpx.AsyncClient(timeout=28.0) as client:
         resp = await client.post(ANTHROPIC_URL, json=payload, headers=headers)
         resp.raise_for_status()
         data = resp.json()
 
-    raw = data["content"][0]["text"].strip()
+    raw = data["choices"][0]["message"]["content"].strip()
 
     # Strip markdown fences if model adds them
     raw = re.sub(r"^```(?:json)?\s*", "", raw)
@@ -266,7 +265,7 @@ async def health():
 async def chat(request: ChatRequest) -> ChatResponse:
     catalog = load_catalog()
 
-    if not ANTHROPIC_API_KEY:
+    if not OPENROUTER_API_KEY:
         raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
 
     # Enforce turn cap (16 turns = 16 messages)
