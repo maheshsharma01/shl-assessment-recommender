@@ -96,7 +96,7 @@ def _inline_catalog() -> list[dict]:
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-MODEL = "mistralai/mistral-7b-instruct:free"
+MODEL = "openai/gpt-oss-20b:free"
 
 
 def _catalog_text(catalog: list[dict]) -> str:
