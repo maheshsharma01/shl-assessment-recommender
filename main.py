@@ -153,11 +153,23 @@ async def call_llm(messages: list[Message], catalog: list[dict]) -> dict:
     system_prompt = SYSTEM_PROMPT_TEMPLATE.format(catalog=catalog_txt)
 
     payload = {
-        "model": MODEL,
-        "max_tokens": 1024,
-        "system": system_prompt,
-        "messages": [{"role": m.role, "content": m.content} for m in messages],
-    }
+    "model": MODEL,
+    "messages": [
+        {
+            "role": "system",
+            "content": system_prompt
+        },
+        *[
+            {
+                "role": m.role,
+                "content": m.content
+            }
+            for m in messages
+        ]
+    ],
+    "max_tokens": 1024,
+    "temperature": 0.2
+}
 
     headers = {
     "Authorization": f"Bearer {OPENROUTER_API_KEY}",
