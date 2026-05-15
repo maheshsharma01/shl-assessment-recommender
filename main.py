@@ -94,9 +94,9 @@ def _inline_catalog() -> list[dict]:
 
 # ── LLM client ────────────────────────────────────────────────────────────────
 
-ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "")
-ANTHROPIC_URL = "https://api.anthropic.com/v1/messages"
-MODEL = "claude-3-5-haiku-latest"   # fast, fits 30 s budget
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
+MODEL = "mistralai/mistral-7b-instruct:free"
 
 
 def _catalog_text(catalog: list[dict]) -> str:
@@ -165,7 +165,7 @@ async def call_llm(messages: list[Message], catalog: list[dict]) -> dict:
 }
 
     async with httpx.AsyncClient(timeout=28.0) as client:
-        resp = await client.post(ANTHROPIC_URL, json=payload, headers=headers)
+        resp = await client.post(OPENROUTER_URL, json=payload, headers=headers)
         resp.raise_for_status()
         data = resp.json()
 
