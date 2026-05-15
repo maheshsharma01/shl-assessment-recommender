@@ -269,8 +269,8 @@ async def chat(request: ChatRequest) -> ChatResponse:
     if not ANTHROPIC_API_KEY:
         raise HTTPException(status_code=500, detail="ANTHROPIC_API_KEY not configured")
 
-    # Enforce turn cap (8 turns = 8 messages)
-    messages = request.messages[-8:]
+    # Enforce turn cap (16 turns = 16 messages)
+    messages = request.messages[-16:]
 
     try:
         parsed = await call_llm(messages, catalog)
